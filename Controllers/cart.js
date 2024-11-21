@@ -62,7 +62,7 @@ export const getUserCart = async (req, res) => {
 // remove product from cart 
 export const removeFromCart = async (req, res) => {
     try {
-        const { productId } = req.body;
+        const { productId } = req.params; // Changed from req.body to req.params
         const user = {
             id: "673f0a99e621d7eb39d2d7a8"
         };
