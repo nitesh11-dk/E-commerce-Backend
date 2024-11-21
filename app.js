@@ -2,6 +2,7 @@ import express from 'express'
 import { connectDb } from './config/dbconfig.js'
 import user from './Routes/user.js'
 import product from './Routes/product.js'
+import cart from './Routes/cart.js'
 
 
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 // routes 
 app.use('/api/user', user)
 app.use('/api/product', product)
+app.use('/api/cart', cart)
 
 
 
