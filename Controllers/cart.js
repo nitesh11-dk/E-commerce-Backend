@@ -5,6 +5,7 @@ import Product from "../Models/product.js";
 export const addToCart = async (req, res) => {
     try {
         const { productId, quantity = 1 } = req.body;
+
         const user = {
             id: "673f0a99e621d7eb39d2d7a8"
         };
@@ -82,4 +83,22 @@ export const removeFromCart = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: "Error removing product from cart", success: false });
     }
-};      
+};
+
+export const clearCart = async (req, res) => {
+    try {
+        const user = {
+            id: "673f0a99e621d7eb39d2d7a8"
+        };
+        const cart = await Cart.findOne({ userId: user.id });
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found", success: false });
+        }
+        cart.items = [];
+        await cart.save();
+        res.status(200).json({ message: "Cart cleared successfully", success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error clearing cart", success: false });
+    }
+};
