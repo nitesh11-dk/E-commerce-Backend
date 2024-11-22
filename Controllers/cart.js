@@ -98,7 +98,7 @@ export const clearCart = async (req, res) => {
         await cart.save();
         res.status(200).json({ message: "Cart cleared successfully", success: true });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error clearing cart", success: false });
+        console.log(error);
+        res.json({ message: "Error clearing cart", success: false });
     }
 };
