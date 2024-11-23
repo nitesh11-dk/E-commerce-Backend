@@ -102,3 +102,31 @@ export const clearCart = async (req, res) => {
         res.json({ message: "Error clearing cart", success: false });
     }
 };
+
+export const decreaseQuantity = async (req, res) => {
+    try {
+        const { productId } = req.params; // Changed from req.body to req.params
+        const user = {
+            id: "673f0a99e621d7eb39d2d7a8"
+        };
+        const cart = await Cart.findOne({ userId: user.id });
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found", success: false });
+        }
+        const itemIndex = cart.items.findIndex(item => item.productId?.toString() === productId);
+        if (itemIndex === -1) {
+            return res.status(404).json({ message: "Product not found in cart", success: false });
+        }
+        if (cart.items[itemIndex].quantity > 1) {
+            cart.items[itemIndex].quantity -= 1;
+            cart.items[itemIndex].totalPrice -= cart.items[itemIndex].price;
+        } else {
+            cart.items.splice(itemIndex, 1);
+        }
+        await cart.save();
+        res.status(200).json({ message: "Product quantity decreased successfully", success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error decreasing product quantity", success: false });
+    }
+}
