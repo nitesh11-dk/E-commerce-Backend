@@ -1,5 +1,6 @@
 import User from "../Models/user.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 
 export const registerUser = async (req, res) => {
@@ -22,7 +23,6 @@ export const registerUser = async (req, res) => {
     }
 };
 
-
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -36,12 +36,25 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials", success: false });
         }
 
-        res.status(200).json({ message: "Login successful", success: true });
+        const token = jwt.sign({ id: user._id }, "niteshkushwaha", { expiresIn: "24h" });
+
+        // Set the cookie first
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        // Then send the JSON response
+        return res.status(200).json({
+            message: "Login successful",
+            success: true,
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error logging in" });
     }
-}
+};
 
 export const allUsers = async (req, res) => {
     try {

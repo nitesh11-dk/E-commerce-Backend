@@ -1,5 +1,6 @@
 import express from 'express'
 import { connectDb } from './config/dbconfig.js'
+import cookieParser from 'cookie-parser';
 import user from './Routes/user.js'
 import product from './Routes/product.js'
 import cart from './Routes/cart.js'
@@ -13,7 +14,7 @@ connectDb();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
 
 // routes 
 app.use('/api/user', user)
