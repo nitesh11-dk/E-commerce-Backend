@@ -65,3 +65,16 @@ export const allUsers = async (req, res) => {
         res.status(500).json({ message: "Error fetching users", success: false });
     }
 }
+
+export const getProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found", success: false });
+        }
+        res.status(200).json({ user, success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error fetching user", success: false });
+    }
+}   
