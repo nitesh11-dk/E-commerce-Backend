@@ -20,4 +20,15 @@ export const addAddress = async (req, res) => {
     }
 }
 
-
+export const getAddress = async (req, res) => {
+    let userId = req.user._id;
+    try {
+        // let address = await Address.find().sort({ createdAt: -1 }).where("userId").equals(userId);
+        let address = await Address.find({ userId }).sort({ createdAt: -1 });
+        // let address = await Address.find({ userId});
+        res.status(200).json({ address, success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error getting address", success: false });
+    }
+}   
