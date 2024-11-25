@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import user from './Routes/user.js'
 import product from './Routes/product.js'
 import cart from './Routes/cart.js'
-
+import address from './Routes/address.js'
 
 
 const PORT = 3000
@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use('/api/user', user)
 app.use('/api/product', product)
 app.use('/api/cart', cart)
-
+app.use('/api/address', address)
 
 
 
