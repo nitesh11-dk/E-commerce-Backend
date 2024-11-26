@@ -5,13 +5,17 @@ import user from './Routes/user.js'
 import product from './Routes/product.js'
 import cart from './Routes/cart.js'
 import address from './Routes/address.js'
-
+import cors from 'cors'
 
 const PORT = 3000
 const app = express()
 connectDb();
 
-
+app.use(cors({
+    origin: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

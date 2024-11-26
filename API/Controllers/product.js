@@ -20,7 +20,7 @@ export const addProduct = async (req, res) => {
 export const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find();
-        res.status(200).json({ products, success: true });
+        res.status(200).json({ products, success: true, message: " all products" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "products not found", success: false });
