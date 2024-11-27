@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useContext } from 'react';
 import Appcontext from '../Context/Appcontext';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,8 +34,8 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end flex gap-2">
-        <button className="btn btn-outline">Admin Login</button>
-        <button className="btn btn-primary">Signup</button>
+        <Link to="/register" className="btn btn-outline">SignUp</Link>
+        <Link to="/login" className="btn btn-outline">SignIn</Link>
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ const ShowProduct = () => {
     return <div>Loading...</div>;
   }
 
-  // Filter products based on the search query
+
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchFilter.toLowerCase())
   );
