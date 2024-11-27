@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom'
 
 const Cards = ({products}) => {
   return (
-    <div className='flex gap-4  justify-between px-20 w-screen'>
+    <div className='flex gap-10  justify-center  px-20 w-screen'>
     {products.map((product) => (
       <Link to={`/product/${product._id}`} key={product._id} className="card bg-base-100 p-2 w-92 shadow-xl">
       <figure>

@@ -9,7 +9,7 @@ const RelatedProduct = ({ category, productId }) => {
 
   useEffect(() => {
     const filterProduct = products.filter(
-      (product) => product.category === category && product._id !== productId
+      (product) => product?.category?.toLowerCase() === category?.toLowerCase() && product._id !== productId
     )
     setRelatedProduct(filterProduct)
   }, [category, productId, products])
