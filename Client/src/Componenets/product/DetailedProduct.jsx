@@ -34,7 +34,7 @@ const formattedDate =  new Date(product.createdAt).toLocaleString();
     <>
     
     
-    <div className='w-screen h-screen flex-col flex items-center gap-10 py-10'>   
+    <div className=' flex-col flex items-center gap-10 py-10'>   
 <div className="card  bg-zinc-700 p-4  w-full max-w-5xl shadow-xl flex flex-row items-center">
   <figure className="w-1/2 ">
     <img

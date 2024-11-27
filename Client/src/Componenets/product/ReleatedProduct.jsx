@@ -15,7 +15,7 @@ const RelatedProduct = ({ category, productId }) => {
   }, [category, productId, products])
 
   return (
-    <div className='text-white'>
+    <div className='text-white '>
       <h2 className='text-center text-2xl tracking-wider font-bold mb-4'>Related Products</h2>
       <Cards products={relatedProduct} />
     </div>

@@ -1,20 +1,15 @@
 import { useContext } from 'react';
-import Appcontext from '../../Context/AppContext';
+import AppContext from '../../Context/AppContext';
 import Cards from './Cards';
 
 const ShowProduct = () => {
-  const { products, searchFilter } = useContext(Appcontext);
+  const { products } = useContext(AppContext);
 
   if (!products) {
     return <div>Loading...</div>;
   }
 
-
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchFilter.toLowerCase())
-  );
-
-  return <Cards products={filteredProducts} />;
+  return <Cards products={products} />;
 };
 
 export default ShowProduct;
