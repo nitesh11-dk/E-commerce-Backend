@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { FaSearch, FaShoppingCart } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AppContext from '../Context/Appcontext';
 import { toast } from 'react-toastify';
 
@@ -22,7 +22,7 @@ const Navbar = () => {
     setCategoryFilterState(category.toLowerCase());
   };
 
-
+const location = useLocation();
 
   return (
     <div>
@@ -71,7 +71,9 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="bg-base400 flex items-center justify-center  p-4">
+      {
+         (location.pathname === '/') && (
+          <div className="bg-base400 flex items-center justify-center  p-4">
         <div className="flex justify-between gap-10 items-center">
           <div className="flex gap-4">
     
@@ -115,6 +117,9 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      
+         )  
+      }
     </div>
   );
 };
