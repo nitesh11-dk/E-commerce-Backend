@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { FaSearch, FaShoppingCart } from 'react-icons/fa';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AppContext from '../Context/Appcontext';
@@ -7,10 +7,10 @@ import { toast } from 'react-toastify';
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
-  const { setSearchFilter, isLoggedIn, logoutUser, setCategoryFilterState, clearFilters } = useContext(AppContext);
+  const { setSearchFilter, isLoggedIn, logoutUser, setCategoryFilterState, clearFilters ,cart } = useContext(AppContext);
+
 
   let navigate = useNavigate();
-
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -47,6 +47,13 @@ const location = useLocation();
         <div className="navbar-end flex gap-2">
           {isLoggedIn ? (
             <>
+              <Link to="/cart" className="btn btn-ghost relative">
+          <span className=' h-6 w-6  absolute flex items-center justify-center top-0 right-0 rounded-full '>
+           { cart &&  cart?.items?.length
+           }
+          </span>
+            <FaShoppingCart className="text-xl" />
+          </Link>
               <Link to="/profile" className="btn btn-outline">Profile</Link>
               <button 
                 onClick={() => {
@@ -65,9 +72,7 @@ const location = useLocation();
             </>
           )}
 
-          <Link to="/cart" className="btn btn-ghost">
-            <FaShoppingCart className="text-xl" />
-          </Link>
+        
         </div>
       </div>
 

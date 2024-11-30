@@ -1,6 +1,7 @@
   import { useEffect, useState } from "react";
   import AppContext from "./Appcontext.jsx";
   import axios from "axios";
+import { toast } from "react-toastify";
 
   const Appstate = (props) => {
     const [products, setProducts] = useState([]);
@@ -9,6 +10,11 @@
     const [token, setToken] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
    const [user, setUser] = useState(null);
+
+const [cart, setCart] = useState(null)
+
+
+//  product fetched
     const fetchedProduct = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/product/all", {
@@ -27,13 +33,8 @@
       fetchedProduct();
     }, []);
 
-    // if token changes 
-    useEffect(() => {
-      if (token) {
-        setIsLoggedIn(true);
-      }
-    }, [token]);
-
+    
+    //  User 
     const logoutUser = () => {
       setToken(null);
       setIsLoggedIn(false);
@@ -63,23 +64,114 @@
       }
     };
 
-
     const  userProfile = async ()=>{
+      try{
+         if(localStorage.getItem("token")){
+           let response = await axios.get("http://localhost:3000/api/user/profile", {
+             headers: {
+                 "Content-Type": "application/json",
+                 withCredentials: true ,
+                 "Auth" : token
+             }
+         })
+        setUser(response.data.user)
+         }
+      }catch (err){
+           console.log("Error in feteching the user profile data",err )
+      }
+   }
+
+//  cart 
+    const  getCart = async ()=>{
        try{
           if(localStorage.getItem("token")){
-            let response = await axios.get("http://localhost:3000/api/user/profile", {
+            let response = await axios.get("http://localhost:3000/api/cart/user", {
               headers: {
                   "Content-Type": "application/json",
                   withCredentials: true ,
                   "Auth" : token
               }
           })
-         setUser(response.data.user)
+         setCart(response.data?.cart)
           }
        }catch (err){
             console.log("Error in feteching the user profile data",err )
        }
     }
+
+    useEffect(()=>{
+      if (token) {
+        getCart()
+      }
+    },[getCart])
+
+    const addToCart = async ( productId ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+    
+          let response = await axios.post(
+            "http://localhost:3000/api/cart/add",
+            {
+              productId:productId, 
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                withCredentials: true,
+                "Auth": token, 
+              },
+            }
+          );
+
+        }
+      } catch (err) {
+        console.log("Error in fetching the user profile data", err);
+      }
+    };
+    
+    const decreaseQuantity = async ( productId ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+    
+          let response = await axios.get(
+            `http://localhost:3000/api/cart/--qty/${productId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                withCredentials: true,
+                "Auth": token, 
+              },
+            }
+          );
+        }
+      } catch (err) {
+        console.log("Error in fetching the user profile data", err);
+      }
+    };
+    const removeItem = async ( productId ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+    
+          let response = await axios.delete(
+            `http://localhost:3000/api/cart/remove/${productId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                withCredentials: true,
+                "Auth": token, 
+              },
+            }
+          );
+        }
+      } catch (err) {
+        console.log("Error in fetching the user profile data", err);
+      }
+    };
+    
+    
 
 
 
@@ -87,8 +179,6 @@
     const setCategoryFilterState = (category) => {
       setCategoryFilter(category);
     };
-
-
     const clearFilters = () => {
       setSearchFilter(""); // Reset search filter
       setCategoryFilter(""); // Reset category filter
@@ -113,7 +203,9 @@
           loginUser,
           logoutUser,
           clearFilters, 
-          user,userProfile
+          user,userProfile ,
+          cart,
+          addToCart ,decreaseQuantity,removeItem
         }}
       >
         {props.children}

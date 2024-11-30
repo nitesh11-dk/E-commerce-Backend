@@ -1,10 +1,14 @@
 import React from 'react'
-import { useEffect, useState , } from 'react';
+import { useEffect, useState ,useContext } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import ReleatedProduct from './ReleatedProduct';
-const DetailedProduct = () => {
+import AppContext from '../../Context/Appcontext';
+import {  toast } from "react-toastify";
 
+const DetailedProduct = () => {
+  
+  const {  addToCart ,isLoggedIn } = useContext(AppContext);
     let  {id } = useParams();
     const [product, setProduct] = useState(null);
 
@@ -69,9 +73,20 @@ const formattedDate =  new Date(product.createdAt).toLocaleString();
         <p><strong>Created At:</strong> {formattedDate}</p>
       </div>
 
-      <button className="btn btn-primary w-full mt-6 text-white hover:bg-indigo-700 transition-all duration-300">
-        Add to Cart
-      </button>
+      <button 
+  onClick={(event) => {
+    event.stopPropagation(); 
+    if (isLoggedIn) {
+      addToCart(product._id);
+    } else {
+      toast.error("Please log in to add items to the cart.");
+    }
+  }} 
+  className="btn btn-primary w-full mt-6 text-white hover:bg-indigo-700 transition-all duration-300"
+>
+  Add to Cart
+</button>
+
     </div>
   </div>
 </div>

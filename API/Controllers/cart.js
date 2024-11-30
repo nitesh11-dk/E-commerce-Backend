@@ -6,9 +6,7 @@ export const addToCart = async (req, res) => {
     try {
         const { productId, quantity = 1 } = req.body;
 
-        const user = {
-            id: "673f0a99e621d7eb39d2d7a8"
-        };
+        const user = req.user;
         const cart = await Cart.findOne({ userId: user.id });
 
         const product = await Product.findById(productId);
@@ -46,13 +44,13 @@ export const addToCart = async (req, res) => {
 // get user cart 
 export const getUserCart = async (req, res) => {
     try {
-        const user = {
-            id: "673f0a99e621d7eb39d2d7a8"
-        };
-        const cart = await Cart.findOne({ userId: user.id });
+        const user = req.user;
+        const cart = await Cart.findOne({ userId: user.id }).populate('items.productId');
+
         if (!cart) {
             return res.status(404).json({ message: "Cart not found", success: false });
         }
+
         res.status(200).json({ cart, success: true });
     } catch (error) {
         console.error(error);
@@ -60,13 +58,12 @@ export const getUserCart = async (req, res) => {
     }
 };
 
+
 // remove product from cart 
 export const removeFromCart = async (req, res) => {
     try {
         const { productId } = req.params; // Changed from req.body to req.params
-        const user = {
-            id: "673f0a99e621d7eb39d2d7a8"
-        };
+        const user = req.user;
         const cart = await Cart.findOne({ userId: user.id });
         if (!cart) {
             return res.status(404).json({ message: "Cart not found", success: false });
@@ -87,9 +84,7 @@ export const removeFromCart = async (req, res) => {
 
 export const clearCart = async (req, res) => {
     try {
-        const user = {
-            id: "673f0a99e621d7eb39d2d7a8"
-        };
+        const user = req.user;
         const cart = await Cart.findOne({ userId: user.id });
         if (!cart) {
             return res.status(404).json({ message: "Cart not found", success: false });
@@ -106,9 +101,7 @@ export const clearCart = async (req, res) => {
 export const decreaseQuantity = async (req, res) => {
     try {
         const { productId } = req.params;
-        const user = {
-            id: "673f0a99e621d7eb39d2d7a8",
-        };
+        const user = req.user;
 
 
 

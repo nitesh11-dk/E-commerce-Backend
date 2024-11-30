@@ -1,10 +1,14 @@
 import {Link} from 'react-router-dom'
-
+import AppContext from '../../Context/Appcontext';
+import {  toast } from "react-toastify";
+import { useContext } from 'react';
 const Cards = ({products}) => {
+  const {  addToCart ,isLoggedIn } = useContext(AppContext);
   return (
-    <div className='flex gap-10  justify-center  px-20 w-[99%]'>
+    <div  className='flex gap-10  justify-center  px-20 w-[99%]'>
     {products.map((product) => (
-      <Link to={`/product/${product._id}`} key={product._id} className="card bg-base-100 p-2 w-92 shadow-xl">
+     <div key={product._id} className="card bg-base-100 p-2 h-fit w-92 shadow-xl">
+       <Link to={`/product/${product._id}`}  >
       <figure>
         <img
           src={product.image}
@@ -20,9 +24,23 @@ const Cards = ({products}) => {
         <div className="flex justify-between items-center mt-4">
           <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
         </div>
-        <button className="btn btn-primary w-full mt-4">Add to Cart</button>
+       
       </div>
     </Link>
+    <button 
+  onClick={(event) => {
+    event.stopPropagation(); 
+    if (isLoggedIn) {
+      addToCart(product._id);
+    } else {
+      toast.error("Please log in to add items to the cart.");
+    }
+  }} 
+  className="btn btn-primary w-full mt-6 text-white hover:bg-indigo-700 transition-all duration-300"
+>
+  Add to Cart
+</button>
+     </div>
     ))}
   </div>
   )
