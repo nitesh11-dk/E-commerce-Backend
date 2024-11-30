@@ -8,7 +8,7 @@
     const [categoryFilter, setCategoryFilter] = useState("");
     const [token, setToken] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+   const [user, setUser] = useState(null);
     const fetchedProduct = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/product/all", {
@@ -27,6 +27,7 @@
       fetchedProduct();
     }, []);
 
+    // if token changes 
     useEffect(() => {
       if (token) {
         setIsLoggedIn(true);
@@ -62,6 +63,27 @@
       }
     };
 
+
+    const  userProfile = async ()=>{
+       try{
+          if(localStorage.getItem("token")){
+            let response = await axios.get("http://localhost:3000/api/user/profile", {
+              headers: {
+                  "Content-Type": "application/json",
+                  withCredentials: true ,
+                  "Auth" : token
+              }
+          })
+         setUser(response.data.user)
+          }
+       }catch (err){
+            console.log("Error in feteching the user profile data",err )
+       }
+    }
+
+
+
+
     const setCategoryFilterState = (category) => {
       setCategoryFilter(category);
     };
@@ -91,6 +113,7 @@
           loginUser,
           logoutUser,
           clearFilters, 
+          user,userProfile
         }}
       >
         {props.children}
