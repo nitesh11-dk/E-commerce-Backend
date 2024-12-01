@@ -30,7 +30,7 @@ const ShoppingCart = () => {
 
 
   return (
-    <div className="container mx-auto p-6 relative  text-white ">
+    <div className="container mx-auto p-6 relative w-1/2  text-white ">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold">Shopping Cart</h1>
