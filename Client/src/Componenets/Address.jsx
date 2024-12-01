@@ -22,7 +22,7 @@ const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
     addAddress(address);
-    navigate('/checkout')
+    navigate('/checkout');
   };
 
   return (
