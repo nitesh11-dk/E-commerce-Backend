@@ -1,13 +1,14 @@
 import React, { useContext ,useEffect,useState } from "react";
 import AppContext from "../Context/AppContext";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
 const ShoppingCart = () => {
   let { cart , addToCart ,isLoggedIn , decreaseQuantity ,removeItem,clearCart} = useContext(AppContext);
 
+  const navigate = useNavigate();
 
   
   if (!cart) {
@@ -22,6 +23,7 @@ const ShoppingCart = () => {
     return (
       <div className="text-center text-white mt-10">
         <h1 className="text-3xl">No items in the card </h1>
+      <Link to="/" className="btn text-xl btn-warning mt-4">Continue Shopping ...</Link>
       </div>
     )
   }
@@ -118,7 +120,7 @@ const ShoppingCart = () => {
       </div>
 
       <div className="items-center justify-center flex gap-10 m-8">
-        <button   className="p-3 bg-green-600 text-white rounded-xl hover:bg-green-700" >Checkout</button>
+        <button onClick={() => navigate("/Address")}   className="p-3 bg-green-600 text-white rounded-xl hover:bg-green-700" >Checkout</button>
         <button onClick={()=>{
           if(confirm("sure want to clear the cart")){
             clearCart()

@@ -48,7 +48,7 @@ const location = useLocation();
           {isLoggedIn ? (
             <>
               <Link to="/cart" className="btn btn-ghost relative">
-          <span className=' h-6 w-6  absolute flex items-center justify-center top-0 right-0 rounded-full '>
+          <span className={` h-6 w-6  absolute flex items-center justify-center ${cart?.items?.length >0 ? 'visible' : 'hidden'} top-0 right-0 rounded-full `}>
            { cart &&  cart?.items?.length
            }
           </span>

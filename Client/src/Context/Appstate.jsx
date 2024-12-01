@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
     const [token, setToken] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
    const [user, setUser] = useState(null);
-
 const [cart, setCart] = useState(null)
 
 
@@ -33,6 +32,8 @@ const [cart, setCart] = useState(null)
       fetchedProduct();
     }, []);
 
+
+
     
     //  User 
     const logoutUser = () => {
@@ -54,7 +55,6 @@ const [cart, setCart] = useState(null)
           setToken(token);
           setIsLoggedIn(true);
           localStorage.setItem("token", token);
-          return response.data.message;
         } else {
           throw new Error(response.data.message);
         }
@@ -70,9 +70,9 @@ const [cart, setCart] = useState(null)
            let response = await axios.get("http://localhost:3000/api/user/profile", {
              headers: {
                  "Content-Type": "application/json",
-                 withCredentials: true ,
                  "Auth" : token
-             }
+                },
+                withCredentials: true ,
          })
         setUser(response.data.user)
          }
@@ -88,9 +88,9 @@ const [cart, setCart] = useState(null)
             let response = await axios.get("http://localhost:3000/api/cart/user", {
               headers: {
                   "Content-Type": "application/json",
-                  withCredentials: true ,
                   "Auth" : token
-              }
+                },
+                withCredentials: true ,
           })
          setCart(response.data?.cart)
           }
@@ -118,9 +118,9 @@ const [cart, setCart] = useState(null)
             {
               headers: {
                 "Content-Type": "application/json",
-                withCredentials: true,
                 "Auth": token, 
               },
+              withCredentials: true,
             }
           );
 
@@ -140,9 +140,9 @@ const [cart, setCart] = useState(null)
             {
               headers: {
                 "Content-Type": "application/json",
-                withCredentials: true,
                 "Auth": token, 
               },
+              withCredentials: true,
             }
           );
         }
@@ -160,9 +160,9 @@ const [cart, setCart] = useState(null)
             {
               headers: {
                 "Content-Type": "application/json",
-                withCredentials: true,
                 "Auth": token, 
               },
+              withCredentials: true,
             }
           );
         }
@@ -181,9 +181,9 @@ const [cart, setCart] = useState(null)
             {
               headers: {
                 "Content-Type": "application/json",
-                withCredentials: true,
                 "Auth": token, 
               },
+              withCredentials: true,
             }
           );
         }
@@ -192,7 +192,51 @@ const [cart, setCart] = useState(null)
       }
     };
     
+
+
+
+    const addAddress = async (address ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+          let response = await axios.post(
+            `http://localhost:3000/api/address/add`,address,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+          toast.success(response.data.message)
+        }
+      } catch (err) {
+        console.log("Error in adding the address ", err);
+      }
+    };
+    const getAddress = async ( ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+          let response = await axios.get(
+            `http://localhost:3000/api/address/get`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+          setUserAddress(response.data.address)
+        }
+      } catch (err) {
+        console.log("Error in getting the address ", err);
+      }
+    };
     
+  
 
 
 
@@ -229,7 +273,7 @@ const [cart, setCart] = useState(null)
           clearCart , 
           addToCart ,
           decreaseQuantity,
-          removeItem
+          removeItem,addAddress
         }}
       >
         {props.children}

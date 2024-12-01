@@ -9,6 +9,9 @@ import Register from './Componenets/User/Register';
 import Login from './Componenets/User/Login';
 import Profile from './Componenets/User/Profile';
 import ShoppingCart from './Componenets/Cart';
+import Address from './Componenets/Address';
+import Checkout from './Componenets/Checkout';
+
 const App = () => {
   return (
     <Router>
@@ -23,6 +26,8 @@ const App = () => {
          <Route path='/login' element={<Login/>}/>
          <Route path='/profile' element={<Profile/>}/>
          <Route path='/cart' element={<ShoppingCart/>}/>
+         <Route path='/address' element={<Address/>}/>
+         <Route path='/checkout' element={<Checkout/>}/>
       </Routes>
     </Router>
   );

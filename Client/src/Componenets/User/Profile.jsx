@@ -11,7 +11,7 @@ const Profile = () => {
     return <div>Loading...</div>
    }
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900">
+    <div className="flex justify-center items-center h-[92vh]">
     <div className="w-80 bg-gray-800 text-white rounded-lg shadow-md p-6">
       <div className="flex flex-col items-center">
         <div className="bg-blue-500 h-16 w-16 rounded-full flex justify-center items-center text-xl font-bold uppercase">
