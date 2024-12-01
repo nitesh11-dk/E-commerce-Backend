@@ -11,9 +11,11 @@ import { toast } from "react-toastify";
     const [isLoggedIn, setIsLoggedIn] = useState(false);
    const [user, setUser] = useState(null);
 const [cart, setCart] = useState(null)
+const [reload ,setReload] = useState(false) ;
+const [userAddress, setUserAddress] = useState(null)
 
 
-//  product fetched
+
     const fetchedProduct = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/product/all", {
@@ -27,11 +29,35 @@ const [cart, setCart] = useState(null)
         console.error("Error fetching products:", error.message);
       }
     };
+    const setCategoryFilterState = (category) => {
+      setCategoryFilter(category);
+    };
+    const clearFilters = () => {
+      setSearchFilter(""); // Reset search filter
+      setCategoryFilter(""); // Reset category filter
+    };
+    const filteredProducts = products.filter((product) => {
+      const matchesSearch = product.name.toLowerCase().includes(searchFilter.toLowerCase());
+      const matchesCategory = categoryFilter ? product.category === categoryFilter : true;
+      return matchesSearch && matchesCategory;
+    });
+
 
     useEffect(() => {
       fetchedProduct();
-    }, []);
+      getCart();
+      getAddress();
+    }, [token , reload]);
 
+
+    // reload karne par logout nahi loga 
+    useEffect(() => {
+      let lstoken = localStorage.getItem("token");
+      if (lstoken) {
+        setToken(lstoken);
+        setIsLoggedIn(true);
+      }
+    }, []);
 
 
     
@@ -67,6 +93,7 @@ const [cart, setCart] = useState(null)
     const  userProfile = async ()=>{
       try{
          if(localStorage.getItem("token")){
+          const token = localStorage.getItem("token");
            let response = await axios.get("http://localhost:3000/api/user/profile", {
              headers: {
                  "Content-Type": "application/json",
@@ -85,6 +112,7 @@ const [cart, setCart] = useState(null)
     const  getCart = async ()=>{
        try{
           if(localStorage.getItem("token")){
+            const token = localStorage.getItem("token");
             let response = await axios.get("http://localhost:3000/api/cart/user", {
               headers: {
                   "Content-Type": "application/json",
@@ -99,12 +127,7 @@ const [cart, setCart] = useState(null)
        }
     }
 
-    useEffect(()=>{
-      if (token) {
-        getCart()
-      }
-    },[getCart])
-
+   
     const addToCart = async ( productId ) => {
       try {
         if (localStorage.getItem("token")) {
@@ -123,7 +146,7 @@ const [cart, setCart] = useState(null)
               withCredentials: true,
             }
           );
-
+          setReload(!reload)
         }
       } catch (err) {
         console.log("Error in addding items in the cart ", err);
@@ -145,6 +168,7 @@ const [cart, setCart] = useState(null)
               withCredentials: true,
             }
           );
+          setReload(!reload)
         }
       } catch (err) {
         console.log("Error in decreasing the quantity", err);
@@ -165,6 +189,8 @@ const [cart, setCart] = useState(null)
               withCredentials: true,
             }
           );
+
+          setReload(!reload)
         }
       } catch (err) {
         console.log("Error in removing item from the cart ", err);
@@ -186,6 +212,7 @@ const [cart, setCart] = useState(null)
               withCredentials: true,
             }
           );
+          setReload(!reload)
         }
       } catch (err) {
         console.log("Error in clearning the cart ", err);
@@ -209,6 +236,7 @@ const [cart, setCart] = useState(null)
               withCredentials: true,
             }
           );
+          setReload(!reload)
           toast.success(response.data.message)
         }
       } catch (err) {
@@ -241,19 +269,6 @@ const [cart, setCart] = useState(null)
 
 
 
-    const setCategoryFilterState = (category) => {
-      setCategoryFilter(category);
-    };
-    const clearFilters = () => {
-      setSearchFilter(""); // Reset search filter
-      setCategoryFilter(""); // Reset category filter
-    };
-
-    const filteredProducts = products.filter((product) => {
-      const matchesSearch = product.name.toLowerCase().includes(searchFilter.toLowerCase());
-      const matchesCategory = categoryFilter ? product.category === categoryFilter : true;
-      return matchesSearch && matchesCategory;
-    });
 
     return (
       <AppContext.Provider
@@ -273,7 +288,7 @@ const [cart, setCart] = useState(null)
           clearCart , 
           addToCart ,
           decreaseQuantity,
-          removeItem,addAddress
+          removeItem,addAddress,userAddress
         }}
       >
         {props.children}

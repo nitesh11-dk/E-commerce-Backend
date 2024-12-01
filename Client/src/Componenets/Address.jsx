@@ -11,7 +11,7 @@ const Address = () => {
     country: '',
     phoneNumber: '',
   });
-  const {  addAddress } = useContext(AppContext);
+  const { userAddress ,addAddress } = useContext(AppContext);
 const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -112,7 +112,13 @@ const navigate = useNavigate()
             Save Address
           </button>
         </form>
-      
+      {
+        userAddress && (
+          <h2 className='text-center'>
+          <button className="p-3 bg-yellow-200 my-3  text-black rounded-xl hover:bg-yellow-300" onClick={() => navigate('/checkout')}>Use Old Address </button>
+          </h2>
+        )
+      }
       </div>
     </div>
   );
