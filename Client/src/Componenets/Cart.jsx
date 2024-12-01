@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 
 const ShoppingCart = () => {
-  let { cart , addToCart ,isLoggedIn , decreaseQuantity ,removeItem} = useContext(AppContext);
+  let { cart , addToCart ,isLoggedIn , decreaseQuantity ,removeItem,clearCart} = useContext(AppContext);
 
 
   
@@ -28,7 +28,7 @@ const ShoppingCart = () => {
 
 
   return (
-    <div className="container mx-auto p-6  text-white min-h-screen">
+    <div className="container mx-auto p-6 relative  text-white ">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold">Shopping Cart</h1>
@@ -98,7 +98,9 @@ const ShoppingCart = () => {
                onClick={(event) => {
                 event.stopPropagation(); 
                 if (isLoggedIn) {
-                  removeItem(item.productId._id);
+                  if(confirm("sure want to remove form the cart")){
+                    removeItem(item.productId._id);
+                  }
                 } else {
                   toast.error("Please log in to add items to the cart.");
                 }
@@ -109,8 +111,19 @@ const ShoppingCart = () => {
                 <FaTrash />
               </button>
             </div>
+
+
           </div>
         ))}
+      </div>
+
+      <div className="items-center justify-center flex gap-10 m-8">
+        <button   className="p-3 bg-green-600 text-white rounded-xl hover:bg-green-700" >Checkout</button>
+        <button onClick={()=>{
+          if(confirm("sure want to clear the cart")){
+            clearCart()
+          }
+        }} className="p-3 bg-red-600 text-white rounded-xl hover:bg-red-700" >ClearCart</button>
       </div>
     </div>
   );

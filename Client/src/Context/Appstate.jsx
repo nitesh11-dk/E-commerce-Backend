@@ -95,7 +95,7 @@ const [cart, setCart] = useState(null)
          setCart(response.data?.cart)
           }
        }catch (err){
-            console.log("Error in feteching the user profile data",err )
+            console.log("Error in feteching the user cart data ",err )
        }
     }
 
@@ -126,7 +126,7 @@ const [cart, setCart] = useState(null)
 
         }
       } catch (err) {
-        console.log("Error in fetching the user profile data", err);
+        console.log("Error in addding items in the cart ", err);
       }
     };
     
@@ -147,7 +147,7 @@ const [cart, setCart] = useState(null)
           );
         }
       } catch (err) {
-        console.log("Error in fetching the user profile data", err);
+        console.log("Error in decreasing the quantity", err);
       }
     };
     const removeItem = async ( productId ) => {
@@ -167,7 +167,28 @@ const [cart, setCart] = useState(null)
           );
         }
       } catch (err) {
-        console.log("Error in fetching the user profile data", err);
+        console.log("Error in removing item from the cart ", err);
+      }
+    };
+    
+    const clearCart = async ( ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+    
+          let response = await axios.delete(
+            `http://localhost:3000/api/cart/clear`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                withCredentials: true,
+                "Auth": token, 
+              },
+            }
+          );
+        }
+      } catch (err) {
+        console.log("Error in clearning the cart ", err);
       }
     };
     
@@ -205,7 +226,10 @@ const [cart, setCart] = useState(null)
           clearFilters, 
           user,userProfile ,
           cart,
-          addToCart ,decreaseQuantity,removeItem
+          clearCart , 
+          addToCart ,
+          decreaseQuantity,
+          removeItem
         }}
       >
         {props.children}
