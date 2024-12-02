@@ -16,6 +16,7 @@ const OrderConformation = () => {
   const order = userOrder[0];
 
   return (
+  
     <div className="h-[93vh] flex items-center justify-center bg-gray-900 text-white">
       <div className="bg-gray-800 shadow-lg rounded-lg p-8 w-full max-w-6xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-green-400">

@@ -48,6 +48,7 @@ const [userOrder, setUserOrder] = useState(null);
       fetchedProduct();
       getCart();
       getAddress();
+      userProfile();
     }, [token , reload]);
 
 
@@ -57,9 +58,6 @@ const [userOrder, setUserOrder] = useState(null);
       if (lstoken) {
         setToken(lstoken);
         setIsLoggedIn(true);
-        if(!user){
-          userProfile();
-      }
     }
     }, []);
 
@@ -282,7 +280,7 @@ const [userOrder, setUserOrder] = useState(null);
             }
           );
           setUserOrder(response.data.orders)
-          // console.log(response.data.orders)
+          console.log(response.data.orders)
 
           // return response.data.orders
         }

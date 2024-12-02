@@ -5,7 +5,7 @@ import { useContext } from 'react';
 const Cards = ({products}) => {
   const {  addToCart ,isLoggedIn } = useContext(AppContext);
   return (
-    <div  className='flex gap-10  justify-center  px-20 w-[99%]'>
+    <div  className='flex gap-10 flex-wrap  justify-center  px-20 w-[99%]'>
     {products.map((product) => (
      <div key={product._id} className="card bg-base-100 p-2 h-fit w-92 shadow-xl">
        <Link to={`/product/${product._id}`}  >
