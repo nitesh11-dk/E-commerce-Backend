@@ -4,33 +4,91 @@ import Razorpay from 'razorpay'; // Import Razorpay
 const razorpay = new Razorpay({
     key_id: "rzp_test_YaU552VxGMnvhU",
     key_secret: "4AL5mEvdAaq0IyYlrgYHWPMk"
-})
-
+});
 
 //checkout
 export const checkout = async (req, res) => {
-    const { amount, cardItems, userShipping, userId } = req.body;
+    try {
+        let { amount, cardItems, userShippingAddress, userId } = req.body;
 
-    var options = {
-        amount: amount * 100,  // amount in the smallest currency unit
-        currency: "INR",
-        receipt: `receipt_#${Date.now()}`,
-    };
-    const order = await razorpay.orders.create(options);
+        // Ensure amount is an integer
+        amount = Math.round(amount); // Rounds to the nearest integer
 
-    res.json({
-        orderId: order.id,
-        amount: amount,
-        cardItems,
-        userShipping,
-        userId,
-        payStatus: "created"
-    })
+        const options = {
+            amount: amount * 100,  // Convert to smallest currency unit
+            currency: "INR",
+            receipt: `receipt_#${Date.now()}`,
+        };
 
-}
+        const order = await razorpay.orders.create(options);
+
+        res.json({
+            orderId: order.id,
+            amount: amount,
+            cardItems,
+            userShippingAddress,
+            userId,
+            payStatus: "created"
+        });
+    } catch (error) {
+        console.error("Error in checkout:", error);
+
+        if (error.statusCode === 400 && error.error?.code === 'BAD_REQUEST_ERROR') {
+            res.status(400).json({
+                message: "Invalid amount. Please provide a valid integer value for the amount.",
+                details: error.error.description,
+            });
+        } else {
+            res.status(500).json({
+                message: "Failed to create order. Please try again later.",
+                error: error.message,
+            });
+        }
+    }
+};
+
 
 export const verifyPayment = async (req, res) => {
+    try {
+        const {
+            userId,
+            orderId,
+            paymentId,
+            signature,
+            amount,
+            orderItems,
+            userShippingAddress,
+        } = req.body;
 
+        const orderConfirm = await Payment.create({
+            orderId,
+            paymentId,
+            signature,
+            amount,
+            orderItems,
+            userId,
+            userShippingAddress,
+            payStatus: "paid"
+        });
 
-    
+        await orderConfirm.save();
+
+        res.json({ message: "Payment verified successfully", success: true, orderConfirm });
+    } catch (error) {
+        console.error("Error in verifyPayment:", error.message);
+        res.status(500).json({ message: "Failed to verify payment", error: error.message });
+    }
+};
+
+//  get orders 
+export const getOrders = async (req, res) => {
+    try {
+        let userId = req.user._id.toString();
+        console.log(userId);
+        const orders = await Payment.find();
+        res.status(200).json({ orders, success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error getting orders", success: false });
+    }
 }
