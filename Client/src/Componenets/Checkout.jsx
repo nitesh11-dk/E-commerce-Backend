@@ -50,7 +50,6 @@ const Checkout = () => {
             userShippingAddress: userAddress,
           }
     const api = await axios.post('http://localhost:3000/api/payment/verify-payment', payemntData);
- console.log('Payment verification response:', api);
 if(api.data.success){
   clearCart();
   toast.success('Payment successful!');
