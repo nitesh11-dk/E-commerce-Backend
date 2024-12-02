@@ -23,7 +23,6 @@ const Navbar = () => {
   };
 
 const location = useLocation();
-
   return (
     <div>
       <div className="navbar bg-base-200 sm:px-20 sticky top-0 z-50 shadow-md">
@@ -81,7 +80,7 @@ const location = useLocation();
           <div className="bg-base400 flex items-center justify-center  p-4">
         <div className="flex justify-between gap-10 items-center">
           <div className="flex gap-4">
-    
+  
             <button 
               onClick={() => handleCategoryChange('Mobile')}
               className={`btn btn-outline ${categoryFilter === 'Mobile' ? 'bg-blue-500 text-white' : ''}`}
