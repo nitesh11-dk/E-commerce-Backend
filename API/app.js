@@ -6,7 +6,7 @@ import user from './Routes/user.js'
 import product from './Routes/product.js'
 import cart from './Routes/cart.js'
 import address from './Routes/address.js'
-
+import payment from './Routes/payment.js'
 const PORT = 3000
 const app = express()
 connectDb();
@@ -25,6 +25,7 @@ app.use('/api/user', user)
 app.use('/api/product', product)
 app.use('/api/cart', cart)
 app.use('/api/address', address)
+app.use('/api/payment', payment)
 
 
 
