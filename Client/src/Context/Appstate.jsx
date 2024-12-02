@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 const [cart, setCart] = useState(null)
 const [reload ,setReload] = useState(false) ;
 const [userAddress, setUserAddress] = useState(null)
+const [userOrder, setUserOrder] = useState(null);
 
 
 
@@ -56,7 +57,10 @@ const [userAddress, setUserAddress] = useState(null)
       if (lstoken) {
         setToken(lstoken);
         setIsLoggedIn(true);
+        if(!user){
+          userProfile();
       }
+    }
     }, []);
 
 
@@ -263,6 +267,29 @@ const [userAddress, setUserAddress] = useState(null)
         console.log("Error in getting the address ", err);
       }
     };
+    const getOrders = async ( ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+          let response = await axios.get(
+            `http://localhost:3000/api/payment/getOrders`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+          setUserOrder(response.data.orders)
+          // console.log(response.data.orders)
+
+          // return response.data.orders
+        }
+      } catch (err) {
+        console.log("Error in getting the address ", err);
+      }
+    };
     
   
 
@@ -288,7 +315,7 @@ const [userAddress, setUserAddress] = useState(null)
           clearCart , 
           addToCart ,
           decreaseQuantity,
-          removeItem,addAddress,userAddress
+          removeItem,addAddress,userAddress,getOrders,userOrder
         }}
       >
         {props.children}

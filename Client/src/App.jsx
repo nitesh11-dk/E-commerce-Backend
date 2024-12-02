@@ -11,6 +11,7 @@ import Profile from './Componenets/User/Profile';
 import ShoppingCart from './Componenets/Cart';
 import Address from './Componenets/Address';
 import Checkout from './Componenets/Checkout';
+import OrderConformation from './Componenets/OrderConformation';
 
 const App = () => {
   return (
@@ -28,6 +29,8 @@ const App = () => {
          <Route path='/cart' element={<ShoppingCart/>}/>
          <Route path='/address' element={<Address/>}/>
          <Route path='/checkout' element={<Checkout/>}/>
+         <Route path='/orderconfirmation' element={<OrderConformation/>}/>
+        
       </Routes>
     </Router>
   );

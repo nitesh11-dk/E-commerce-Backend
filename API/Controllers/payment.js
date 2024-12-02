@@ -1,5 +1,5 @@
 import Payment from "../Models/Payment.js";
-import Razorpay from 'razorpay'; // Import Razorpay
+import Razorpay from 'razorpay';
 
 const razorpay = new Razorpay({
     key_id: "rzp_test_YaU552VxGMnvhU",
@@ -12,7 +12,7 @@ export const checkout = async (req, res) => {
         let { amount, cardItems, userShippingAddress, userId } = req.body;
 
         // Ensure amount is an integer
-        amount = Math.round(amount); // Rounds to the nearest integer
+        amount = amount; // Rounds to the nearest integer
 
         const options = {
             amount: amount * 100,  // Convert to smallest currency unit
@@ -85,7 +85,17 @@ export const getOrders = async (req, res) => {
     try {
         let userId = req.user._id.toString();
         console.log(userId);
-        const orders = await Payment.find();
+        const orders = await Payment.find({ userId }).sort({ orderDate: -1 });
+        res.status(200).json({ orders, success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error getting orders", success: false });
+    }
+}
+
+export const allOrders = async (req, res) => {
+    try {
+        const orders = await Payment.find()
         res.status(200).json({ orders, success: true });
     } catch (error) {
         console.error(error);

@@ -21,6 +21,8 @@ const Checkout = () => {
   const totalQuantity = cart.items?.reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = cart.items?.reduce((acc, item) => acc + item.totalPrice, 0);
 
+
+  
   const handlePayment = async () => {
     try {
       const orderResponse = await axios.post('http://localhost:3000/api/payment/checkout', {
@@ -29,7 +31,6 @@ const Checkout = () => {
         userId: user?._id,
         userShippingAddress: userAddress,
       });
-  
       const { orderId, amount } = orderResponse.data;
       const options = {
         key: "rzp_test_YaU552VxGMnvhU",

@@ -4,7 +4,7 @@ const paymentSchema = new mongoose.Schema({
     orderDate: {
         type: Date,
         default: Date.now
-    },  
+    },
     payStatus: {
         type: String
     }
