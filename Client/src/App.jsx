@@ -18,7 +18,6 @@ const App = () => {
     <Router>
        <ToastContainer />
       <Navbar/>
-
       <Routes>
         <Route path="/" element={<ShowProduct />} />
         <Route path="/product/:id"
@@ -30,7 +29,6 @@ const App = () => {
          <Route path='/address' element={<Address/>}/>
          <Route path='/checkout' element={<Checkout/>}/>
          <Route path='/orderconfirmation' element={<OrderConformation/>}/>
-        
       </Routes>
     </Router>
   );
