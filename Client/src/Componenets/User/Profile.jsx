@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import AppContext from '../../Context/Appcontext'
+import AppContext from '../../Context/Appcontext';
 const Profile = () => {
     let  {user,userProfile} = useContext(AppContext);
     

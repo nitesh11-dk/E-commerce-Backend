@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import AppContext from '../../Context/AppContext';
+import AppContext from '../../Context/Appcontext';
 import Cards from './Cards';
 
 const ShowProduct = () => {

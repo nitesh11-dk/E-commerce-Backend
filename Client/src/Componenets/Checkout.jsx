@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import AppContext from "../Context/AppContext";
+import AppContext from '../Context/Appcontext';
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
