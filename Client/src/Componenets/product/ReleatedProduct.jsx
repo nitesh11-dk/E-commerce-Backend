@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import AppContext from '../../Context/Appcontext.js';
+import AppContext from "../../context/AppContext";
 import Cards from './Cards'
 
 const RelatedProduct = ({ category, productId }) => {

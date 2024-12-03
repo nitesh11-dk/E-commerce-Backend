@@ -3,7 +3,7 @@ import { useEffect, useState ,useContext } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import ReleatedProduct from './ReleatedProduct';
-import AppContext from '../../Context/Appcontext.js';
+import AppContext from "../../context/AppContext";
 import {  toast } from "react-toastify";
 import { BASE_URL } from '../../constants/config';
 const DetailedProduct = () => {
