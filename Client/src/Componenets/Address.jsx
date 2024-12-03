@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import AppContext from '../Context/Appcontext';
+import AppContext from '../Context/Appcontext.js';
 import { useNavigate } from 'react-router-dom';
 
 const Address = () => {

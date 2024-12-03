@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom'
-import AppContext from '../../Context/Appcontext';
+import AppContext from '../../Context/Appcontext.js';
 import {  toast } from "react-toastify";
 import { useContext } from 'react';
 const Cards = ({products}) => {

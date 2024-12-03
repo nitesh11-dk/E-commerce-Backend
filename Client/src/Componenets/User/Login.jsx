@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import {  toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import AppContext from '../../Context/Appcontext'; // Import AppContext
+import AppContext from '../../Context/Appcontext.js'; // Import AppContext
 
 const Login = () => {
   const [formData, setFormData] = useState({

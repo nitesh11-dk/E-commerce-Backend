@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { FaSearch, FaShoppingCart } from 'react-icons/fa';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import AppContext from '../Context/Appcontext';
+import AppContext from '../Context/Appcontext.js';
 import { toast } from 'react-toastify';
 
 const Navbar = () => {

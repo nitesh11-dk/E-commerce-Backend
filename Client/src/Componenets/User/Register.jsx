@@ -1,8 +1,7 @@
 import React, { useContext, useState } from "react";
-import {  toast } from "react-toastify";
 
 import { useNavigate } from "react-router-dom";
-import AppContext from '../../Context/Appcontext';
+import AppContext from '../../Context/Appcontext.js';
 
 const Register = () => {
   const {registerUser} = useContext(AppContext);
