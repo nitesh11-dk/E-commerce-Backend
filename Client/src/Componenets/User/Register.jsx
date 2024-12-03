@@ -24,7 +24,6 @@ const Register = () => {
     e.preventDefault();
    const res =  registerUser(formData);
         if(res){
-          toast.success("Registration successful");
           setFormData({ name: "", email: "", password: "" });
           navigate("/login");
         }
@@ -88,7 +87,6 @@ const Register = () => {
           </button>
         </form>
       </div>
-      <ToastContainer />
     </div>
   );
 };
