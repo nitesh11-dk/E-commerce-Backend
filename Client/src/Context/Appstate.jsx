@@ -85,6 +85,7 @@ const [userOrder, setUserOrder] = useState(null);
           setToken(token);
           setIsLoggedIn(true);
           localStorage.setItem("token", token);
+          toast.success(response.data.message);
         } else {
           throw new Error(response.data.message);
         }

@@ -2,9 +2,8 @@ import mongoose from "mongoose";
 
 export const connectDb = async () => {
     try {
-        mongoose.connect('mongodb://127.0.0.1:27017/e-commerce')
+        mongoose.connect(`${process.env.MONGO_URI}/e-commerce`)
         const connection = mongoose.connection;
-
         connection.on("connected", () => {
             console.log("connected to db");
         })

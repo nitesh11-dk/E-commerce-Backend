@@ -1,10 +1,13 @@
 import Payment from "../Models/Payment.js";
 import Razorpay from 'razorpay';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const razorpay = new Razorpay({
-    key_id: "rzp_test_YaU552VxGMnvhU",
-    key_secret: "4AL5mEvdAaq0IyYlrgYHWPMk"
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_SECRET,
 });
+
 
 //checkout
 export const checkout = async (req, res) => {

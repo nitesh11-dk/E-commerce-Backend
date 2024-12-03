@@ -1,14 +1,16 @@
 import express from 'express'
 import { connectDb } from './config/dbconfig.js'
 import cors from 'cors'
-
 import user from './Routes/user.js'
 import product from './Routes/product.js'
 import cart from './Routes/cart.js'
 import address from './Routes/address.js'
 import payment from './Routes/payment.js'
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 const app = express()
+import dotenv from 'dotenv'
+
+dotenv.config()
 connectDb();
 
 app.use(cors({
