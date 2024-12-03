@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import AppContext from "../../Context/Appcontext";
 
 const Register = () => {
-  const [formData, setFormData] = useState({
+  const {registerUser} = useContext(AppContext);
+
+  const [formData, setFormData,] = useState({
     name: "",
     email: "",
     password: "",
@@ -20,29 +23,11 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/user/register",
-        formData,
-        {
-          headers: { "Content-Type": "application/json" },
+   const res =  registerUser(formData);
+        if(res){
+          setFormData({ name: "", email: "", password: "" });
+          navigate("/login");
         }
-      );
-
-      if (response.data.success) {
-        toast.success(response.data.message);
-
-        setFormData({ name: "", email: "", password: "" }); // Clear form
-
-        // Navigate to the login page after successful registration
-        navigate("/login");
-      }
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Something went wrong. Please try again."
-      );
-    }
   };
 
   return (

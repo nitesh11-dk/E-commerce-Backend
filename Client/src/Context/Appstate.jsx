@@ -2,7 +2,7 @@
   import AppContext from "./Appcontext.jsx";
   import axios from "axios";
 import { toast } from "react-toastify";
-
+import { BASE_URL } from "../constants/config.js";
   const Appstate = (props) => {
     const [products, setProducts] = useState([]);
     const [searchFilter, setSearchFilter] = useState("");
@@ -19,7 +19,7 @@ const [userOrder, setUserOrder] = useState(null);
 
     const fetchedProduct = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/product/all", {
+        const response = await axios.get(`${BASE_URL}/product/all`, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -30,6 +30,8 @@ const [userOrder, setUserOrder] = useState(null);
         console.error("Error fetching products:", error.message);
       }
     };
+
+    
     const setCategoryFilterState = (category) => {
       setCategoryFilter(category);
     };
@@ -73,7 +75,7 @@ const [userOrder, setUserOrder] = useState(null);
     const loginUser = async (email, password) => {
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/user/login",
+          `${BASE_URL}/user/login`,
           { email, password },
           { headers: { "Content-Type": "application/json" } }
         );
@@ -92,11 +94,34 @@ const [userOrder, setUserOrder] = useState(null);
       }
     };
 
+    const registerUser = async (formData) => {
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/user/register`,
+          formData,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (response.data.success) {
+            toast.success(response.data.message);
+            return true
+        } else {
+          throw new Error(response.data.message);
+          return false 
+        }
+      } catch (error) {
+        console.error("Login error:", error.message);
+        return false;
+      }
+    };
+
     const  userProfile = async ()=>{
       try{
          if(localStorage.getItem("token")){
           const token = localStorage.getItem("token");
-           let response = await axios.get("http://localhost:3000/api/user/profile", {
+           let response = await axios.get(`${BASE_URL}/user/profile`, {
              headers: {
                  "Content-Type": "application/json",
                  "Auth" : token
@@ -115,7 +140,7 @@ const [userOrder, setUserOrder] = useState(null);
        try{
           if(localStorage.getItem("token")){
             const token = localStorage.getItem("token");
-            let response = await axios.get("http://localhost:3000/api/cart/user", {
+            let response = await axios.get(`${BASE_URL}/cart/user`, {
               headers: {
                   "Content-Type": "application/json",
                   "Auth" : token
@@ -136,7 +161,7 @@ const [userOrder, setUserOrder] = useState(null);
           const token = localStorage.getItem("token");
     
           let response = await axios.post(
-            "http://localhost:3000/api/cart/add",
+            `${BASE_URL}/cart/add`,
             {
               productId:productId, 
             },
@@ -161,7 +186,7 @@ const [userOrder, setUserOrder] = useState(null);
           const token = localStorage.getItem("token");
     
           let response = await axios.get(
-            `http://localhost:3000/api/cart/--qty/${productId}`,
+            `${BASE_URL}/cart/--qty/${productId}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -182,7 +207,7 @@ const [userOrder, setUserOrder] = useState(null);
           const token = localStorage.getItem("token");
     
           let response = await axios.delete(
-            `http://localhost:3000/api/cart/remove/${productId}`,
+            `${BASE_URL}/cart/remove/${productId}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -205,7 +230,7 @@ const [userOrder, setUserOrder] = useState(null);
           const token = localStorage.getItem("token");
     
           let response = await axios.delete(
-            `http://localhost:3000/api/cart/clear`,
+            `${BASE_URL}/cart/clear`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -229,7 +254,7 @@ const [userOrder, setUserOrder] = useState(null);
         if (localStorage.getItem("token")) {
           const token = localStorage.getItem("token");
           let response = await axios.post(
-            `http://localhost:3000/api/address/add`,address,
+            `${BASE_URL}/address/add`,address,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -250,7 +275,7 @@ const [userOrder, setUserOrder] = useState(null);
         if (localStorage.getItem("token")) {
           const token = localStorage.getItem("token");
           let response = await axios.get(
-            `http://localhost:3000/api/address/get`,
+            `${BASE_URL}/address/get`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -270,7 +295,7 @@ const [userOrder, setUserOrder] = useState(null);
         if (localStorage.getItem("token")) {
           const token = localStorage.getItem("token");
           let response = await axios.get(
-            `http://localhost:3000/api/payment/getOrders`,
+            `${BASE_URL}/payment/getOrders`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -282,7 +307,6 @@ const [userOrder, setUserOrder] = useState(null);
           setUserOrder(response.data.orders)
           console.log(response.data.orders)
 
-          // return response.data.orders
         }
       } catch (err) {
         console.log("Error in getting the address ", err);
@@ -306,6 +330,7 @@ const [userOrder, setUserOrder] = useState(null);
           token,
           isLoggedIn,
           loginUser,
+          registerUser,
           logoutUser,
           clearFilters, 
           user,userProfile ,

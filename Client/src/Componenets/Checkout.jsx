@@ -4,6 +4,7 @@ import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../constants/config";
 
 const Checkout = () => {
   const { cart, addToCart, isLoggedIn, decreaseQuantity, removeItem, userAddress,user,clearCart } = useContext(AppContext);
@@ -25,7 +26,7 @@ const Checkout = () => {
   
   const handlePayment = async () => {
     try {
-      const orderResponse = await axios.post('http://localhost:3000/api/payment/checkout', {
+      const orderResponse = await axios.post(`${BASE_URL}/payment/checkout`, {
         amount: totalPrice,
         cardItems: cart?.items,
         userId: user?._id,
@@ -49,7 +50,7 @@ const Checkout = () => {
             userId: user?._id,
             userShippingAddress: userAddress,
           }
-    const api = await axios.post('http://localhost:3000/api/payment/verify-payment', payemntData);
+    const api = await axios.post(`${BASE_URL}/payment/verify-payment`, payemntData);
 if(api.data.success){
   clearCart();
   toast.success('Payment successful!');
@@ -118,7 +119,7 @@ navigate('/orderconfirmation')
         </Link>
       </td>
       <td className="px-4 py-7 flex justify-center items-center border border-gray-400">{item.quantity}</td>
-      <td className="px-4 py-2 border border-gray-400">${item.productId.price}</td>
+      <td className="px-4 py-2 border border-gray-400">₹{item.productId.price}</td>
       <td className="px-4 py-2 border border-gray-400">
         <button
           onClick={() => isLoggedIn && addToCart(item.productId._id)}
@@ -153,7 +154,7 @@ navigate('/orderconfirmation')
               <tr className="overflow-hidden">
                 <td colSpan="2" className="border border-gray-400 px-4 py-2 text-lg font-bold text-end">Total</td>
                 <td className="px-4 flex justify-center items-center py-2 border border-gray-400 text-lg font-bold">{totalQuantity}</td>
-                <td colSpan="1" className=" border border-gray-400px-4 py-2 text-lg font-bold text-green-400 text-center">${totalPrice.toFixed(2)}</td>
+                <td colSpan="1" className=" border border-gray-400px-4 py-2 text-lg font-bold text-green-400 text-center">₹{totalPrice.toFixed(2)}</td>
                 <td colSpan="3" className=" border border-gray-400px-4 py-2 text-lg font-bold text-green-400 text-center"></td>
               </tr>
             </tfoot>

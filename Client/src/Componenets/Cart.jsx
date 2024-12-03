@@ -61,7 +61,7 @@ const ShoppingCart = () => {
               />
               <div className="ml-6">
                 <h2 className="text-xl font-semibold">{item.productId.name}</h2>
-                <p className="text-gray-400">${item.productId.price}</p>
+                <p className="text-gray-400">₹{item.productId.price}</p>
                 <p className="text-gray-500 text-sm mt-2">
                   Quantity: {item.quantity}
                 </p>

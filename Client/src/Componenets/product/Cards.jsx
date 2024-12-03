@@ -22,7 +22,7 @@ const Cards = ({products}) => {
           <div className="badge badge-secondary">NEW</div>
         </h2>
         <div className="flex justify-between items-center mt-4">
-          <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
+          <span className="text-lg font-semibold">₹{product.price.toFixed(2)}</span>
         </div>
        
       </div>

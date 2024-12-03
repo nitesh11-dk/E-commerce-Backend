@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import ReleatedProduct from './ReleatedProduct';
 import AppContext from '../../Context/Appcontext';
 import {  toast } from "react-toastify";
-
+import { BASE_URL } from '../../constants/config';
 const DetailedProduct = () => {
   
   const {  addToCart ,isLoggedIn } = useContext(AppContext);
@@ -14,7 +14,7 @@ const DetailedProduct = () => {
 
     const fetchProduct = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/product/${id}`, {
+            const response = await axios.get(`${BASE_URL}/product/${id}`, {
                 headers: {
                     "Content-Type": "application/json",
                     withCredentials: true
