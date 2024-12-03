@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import {  toast } from "react-toastify";
+
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../Context/Appcontext";
 
@@ -25,6 +24,7 @@ const Register = () => {
     e.preventDefault();
    const res =  registerUser(formData);
         if(res){
+          toast.success("Registration successful");
           setFormData({ name: "", email: "", password: "" });
           navigate("/login");
         }

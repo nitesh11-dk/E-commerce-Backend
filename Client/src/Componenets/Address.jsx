@@ -91,11 +91,11 @@ const navigate = useNavigate()
             />
           </div>
           <div>
-            <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
+            <label htmlFor="phoneNumber"  className="block text-sm font-medium mb-1">
               Phone Number
             </label>
             <input
-              type="tel"
+              type="number"
               id="phoneNumber"
               name="phoneNumber"
               value={address.phoneNumber}

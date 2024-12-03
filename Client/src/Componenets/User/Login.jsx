@@ -19,25 +19,44 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const { email, password } = formData;
-
+  
     try {
-      const message = await loginUser(email, password); 
-
-      toast.success(message, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "dark",
-      });
-
-      setFormData({ email: "", password: "" }); 
-      navigate("/"); 
+      // Call the loginUser function
+      const message = await loginUser(email, password);
+  
+      if (message) {
+        // Show success toast
+        toast.success(message, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
+  
+        // Clear the form data
+        setFormData({ email: "", password: "" });
+  
+        // Navigate to the home page
+        navigate("/");
+      } else {
+        // If login failed, show error toast
+        toast.error(message, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
+      }
     } catch (error) {
+      // Catch unexpected errors
       toast.error(error, {
         position: "top-right",
         autoClose: 3000,
@@ -49,6 +68,7 @@ const Login = () => {
       });
     }
   };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-900 text-white">

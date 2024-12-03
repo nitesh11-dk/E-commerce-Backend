@@ -79,21 +79,39 @@ const [userOrder, setUserOrder] = useState(null);
           { email, password },
           { headers: { "Content-Type": "application/json" } }
         );
-
+    
+        // Check if the login was successful
         if (response.data.success) {
           const { token } = response.data;
+          // Set the token and login status
           setToken(token);
           setIsLoggedIn(true);
+          // Save the token in localStorage
           localStorage.setItem("token", token);
+          return true 
+          // Show success message
           toast.success(response.data.message);
         } else {
-          throw new Error(response.data.message);
+          // Handle unexpected success = false cases
+          toast.error(response.data.message || "Login failed. Please try again.");
+          return false
         }
       } catch (error) {
-        console.error("Login error:", error.message);
-        return error.message;
+        // Handle different error scenarios
+        if (error.response) {
+          // Server responded with a status other than 200
+          const { message } = error.response.data;
+          toast.error(message || "Server error. Please try again.");
+        } else if (error.request) {
+          // Request was made but no response received
+          toast.error("No response from server. Please check your network.");
+        } else {
+          // Something else happened
+          toast.error(`Login failed: ${error.message}`);
+        }
       }
     };
+    
 
     const registerUser = async (formData) => {
       try {
