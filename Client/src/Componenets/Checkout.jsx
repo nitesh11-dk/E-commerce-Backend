@@ -4,7 +4,7 @@ import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { BASE_URL } from "../constants/config";
+import { BASE_URL, razorpayKey } from "../constants/config";
 
 const Checkout = () => {
   const { cart, addToCart, isLoggedIn, decreaseQuantity, removeItem, userAddress,user,clearCart } = useContext(AppContext);
@@ -34,7 +34,7 @@ const Checkout = () => {
       });
       const { orderId, amount } = orderResponse.data;
       const options = {
-        key: "rzp_test_YaU552VxGMnvhU",
+        key: razorpayKey,
         amount: amount,
         currency: "INR",
         name: "Nitesh-Dk-Ecommerce",
