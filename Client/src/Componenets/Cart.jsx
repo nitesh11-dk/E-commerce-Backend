@@ -1,5 +1,5 @@
 import React, { useContext ,useEffect,useState } from "react";
-import AppContext from "../Context/AppContext.js";
+import AppContext from '../Context/Appcontext.js';
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
