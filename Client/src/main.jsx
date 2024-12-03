@@ -1,11 +1,11 @@
-import { createRoot } from 'react-dom/client'
-import './index.css'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import Appstate from './context/Appstate.jsx'
+import './index.css'
+import AppState from './context/AppState.jsx'
 
-
-createRoot(document.getElementById('root')).render(
-  <Appstate>
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <AppState>
     <App />
-  </Appstate>,
+  </AppState>,
 )
