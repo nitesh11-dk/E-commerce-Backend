@@ -1,39 +1,41 @@
-import React, { useContext } from "react";
-import ShowProduct from "./components/product/ShowProduct";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProductDetail from "./components/product/ProductDetail";
-import Navbar from "./components/Navbar";
-import SearchProduct from "./components/product/SearchProduct";
-import Register from "./components/user/Register";
- import { ToastContainer, toast } from "react-toastify";
- import "react-toastify/dist/ReactToastify.css";
- import Login from "./components/user/Login";
-import Profile from "./components/user/Profile";
-import Cart from './components/Cart'
-import Address from './components/Address'
-import Checkout from './components/Checkout'
-import OrderConfirmation from './components/OrderConfirmation'
+import React, { useContext } from 'react'
+import ShowProduct from './Componenets/product/ShowProduct'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import DetailedProduct from './Componenets/product/DetailedProduct';
+import Navbar from './Componenets/Navbar';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Register from './Componenets/User/Register';
+import Login from './Componenets/User/Login';
+import Profile from './Componenets/User/Profile';
+import ShoppingCart from './Componenets/Cart';
+import Address from './Componenets/Address';
+import Checkout from './Componenets/Checkout';
+import OrderConformation from './Componenets/OrderConformation';
 
 const App = () => {
-  // const {} = useContext(AppContext)
   return (
     <Router>
-      <Navbar />
-      <ToastContainer />
+       <ToastContainer />
+      <Navbar/>
       <Routes>
         <Route path="/" element={<ShowProduct />} />
-        <Route path="/product/search/:term" element={<SearchProduct />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/shipping" element={<Address />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/oderconfirmation" element={<OrderConfirmation />} />
+        <Route path="/product/:id"
+         element={<DetailedProduct />} />
+         <Route path='/register' element={<Register/>}/>
+         <Route path='/login' element={<Login/>}/>
+         <Route path='/profile' element={<Profile/>}/>
+         <Route path='/cart' element={<ShoppingCart/>}/>
+         <Route path='/address' element={<Address/>}/>
+         <Route path='/checkout' element={<Checkout/>}/>
+         <Route path='/orderconfirmation' element={<OrderConformation/>}/>
       </Routes>
     </Router>
   );
 };
 
-export default App;
+export default App
+
+
+
+  

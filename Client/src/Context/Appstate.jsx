@@ -1,366 +1,368 @@
-import React, { useEffect, useState } from "react";
-import AppContext from "./AppContext";
-import axios from "axios";
-import { ToastContainer, toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+  import { useEffect, useState } from "react";
+  import AppContext from "./Appcontext";
+  import axios from "axios";
+import { toast } from "react-toastify";
+import { BASE_URL } from "../constants/config.js";
+  const Appstate = (props) => {
+    const [products, setProducts] = useState([]);
+    const [searchFilter, setSearchFilter] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [token, setToken] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+   const [user, setUser] = useState(null);
+const [cart, setCart] = useState(null)
+const [reload ,setReload] = useState(false) ;
+const [userAddress, setUserAddress] = useState(null)
+const [userOrder, setUserOrder] = useState(null);
 
-const AppState = (props) => {
-  // const url = "http://localhost:1000/api";
-
-  const url = "https://mern-e-commerce-api-youtube.onrender.com/api";
 
 
-  const [products, setProducts] = useState([]);
-  const [token, setToken] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [filteredData, setFilteredData] = useState([]);
-  const [user, setUser] = useState();
-  const [cart, setCart] = useState([]);
-  const [reload, setReload] = useState(false);
-  const [userAddress, setUserAddress] = useState("");
-  const [userOrder, setUserOrder] = useState([]);
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const api = await axios.get(`${url}/product/all`, {
-        headers: {
-          "Content-Type": "Application/json",
-        },
-        withCredentials: true,
-      });
-      console.log(api.data.products);
-      setProducts(api.data.products);
-      setFilteredData(api.data.products);
-      userProfile();
+    const fetchedProduct = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/product/all`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+        setProducts(response.data.products);
+      } catch (error) {
+        console.error("Error fetching products:", error.message);
+      }
     };
-    fetchProduct();
-    userCart();
-    getAddress();
-    user_Order();
-  }, [token, reload]);
 
-  useEffect(() => {
-    let lstoken = localStorage.getItem("token");
-    // console.log("ls token ",lstoken)
-    if (lstoken) {
-      setToken(lstoken);
-      setIsAuthenticated(true);
+    
+    const setCategoryFilterState = (category) => {
+      setCategoryFilter(category);
+    };
+    const clearFilters = () => {
+      setSearchFilter(""); // Reset search filter
+      setCategoryFilter(""); // Reset category filter
+    };
+    const filteredProducts = products.filter((product) => {
+      const matchesSearch = product.name.toLowerCase().includes(searchFilter.toLowerCase());
+      const matchesCategory = categoryFilter ? product.category === categoryFilter : true;
+      return matchesSearch && matchesCategory;
+    });
+
+
+    useEffect(() => {
+      fetchedProduct();
+      getCart();
+      getAddress();
+      userProfile();
+    }, [token , reload]);
+
+
+    // reload karne par logout nahi loga 
+    useEffect(() => {
+      let lstoken = localStorage.getItem("token");
+      if (lstoken) {
+        setToken(lstoken);
+        setIsLoggedIn(true);
+    }
+    }, []);
+
+
+    
+    //  User 
+    const logoutUser = () => {
+      setToken(null);
+      setIsLoggedIn(false);
+      localStorage.removeItem("token");
+    };
+
+    const loginUser = async (email, password) => {
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/user/login`,
+          { email, password },
+          { headers: { "Content-Type": "application/json" } }
+        );
+    
+        // Check if the login was successful
+        if (response.data.success) {
+          const { token } = response.data;
+          // Set the token and login status
+          setToken(token);
+          setIsLoggedIn(true);
+          // Save the token in localStorage
+          localStorage.setItem("token", token);
+          return true 
+          // Show success message
+          toast.success(response.data.message);
+        } else {
+          // Handle unexpected success = false cases
+          toast.error(response.data.message || "Login failed. Please try again.");
+          return false
+        }
+      } catch (error) {
+        // Handle different error scenarios
+        if (error.response) {
+          // Server responded with a status other than 200
+          const { message } = error.response.data;
+          toast.error(message || "Server error. Please try again.");
+        } else if (error.request) {
+          // Request was made but no response received
+          toast.error("No response from server. Please check your network.");
+        } else {
+          // Something else happened
+          toast.error(`Login failed: ${error.message}`);
+        }
+      }
+    };
+    
+
+    const registerUser = async (formData) => {
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/user/register`,
+          formData,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (response.data.success) {
+            toast.success(response.data.message);
+            return true
+        } else {
+          throw new Error(response.data.message);
+          return false 
+        }
+      } catch (error) {
+        console.error("Login error:", error.message);
+        return false;
+      }
+    };
+
+    const  userProfile = async ()=>{
+      try{
+         if(localStorage.getItem("token")){
+          const token = localStorage.getItem("token");
+           let response = await axios.get(`${BASE_URL}/user/profile`, {
+             headers: {
+                 "Content-Type": "application/json",
+                 "Auth" : token
+                },
+                withCredentials: true ,
+         })
+        setUser(response.data.user)
+         }
+      }catch (err){
+           console.log("Error in feteching the user profile data",err )
+      }
+   }
+
+//  cart 
+    const  getCart = async ()=>{
+       try{
+          if(localStorage.getItem("token")){
+            const token = localStorage.getItem("token");
+            let response = await axios.get(`${BASE_URL}/cart/user`, {
+              headers: {
+                  "Content-Type": "application/json",
+                  "Auth" : token
+                },
+                withCredentials: true ,
+          })
+         setCart(response.data?.cart)
+          }
+       }catch (err){
+            console.log("Error in feteching the user cart data ",err )
+       }
     }
 
-    // setToken(localStorage.getItem('token'))
-  }, []);
-
-  // register user
-  const register = async (name, email, password) => {
-    const api = await axios.post(
-      `${url}/user/register`,
-      { name, email, password },
-      {
-        headers: {
-          "Content-Type": "Application/json",
-        },
-        withCredentials: true,
-      }
-    );
-    // alert(api.data.message)
-    toast.success(api.data.message, {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-
-    return api.data;
-    // console.log("user register ",api)
-  };
-
-  // login user
-  const login = async (email, password) => {
-    const api = await axios.post(
-      `${url}/user/login`,
-      { email, password },
-      {
-        headers: {
-          "Content-Type": "Application/json",
-        },
-        withCredentials: true,
-      }
-    );
-    // alert(api.data.message)
-    toast.success(api.data.message, {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-
-    // console.log("user login ",api.data)
-    setToken(api.data.token);
-    setIsAuthenticated(true);
-    localStorage.setItem("token", api.data.token);
-    return api.data;
-  };
-
-  // logout user
-  const logout = () => {
-    setIsAuthenticated(false);
-    setToken(" ");
-    localStorage.removeItem("token");
-    toast.success("Logout Successfully...!", {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-  };
-
-  // user profile
-  const userProfile = async () => {
-    const api = await axios.get(`${url}/user/profile`, {
-      headers: {
-        "Content-Type": "Application/json",
-        Auth: token,
-      },
-      withCredentials: true,
-    });
-    // console.log("user profile ",api.data);
-    setUser(api.data.user);
-  };
-
-  // add To Cart
-  const addToCart = async (productId, title, price, qty, imgSrc) => {
-    console.log("product id = ", productId);
-    const api = await axios.post(
-      `${url}/cart/add`,
-      { productId, title, price, qty, imgSrc },
-      {
-        headers: {
-          "Content-Type": "Application/json",
-          Auth: token,
-        },
-        withCredentials: true,
-      }
-    );
-    setReload(!reload);
-    //  console.log("my cart ",api)
-    toast.success(api.data.message, {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-  };
-
-  // user Cart
-  const userCart = async () => {
-    const api = await axios.get(`${url}/cart/user`, {
-      headers: {
-        "Content-Type": "Application/json",
-        Auth: token,
-      },
-      withCredentials: true,
-    });
-    //  console.log("user cart ",api.data.cart);
-    setCart(api.data.cart);
-    //  setUser("user cart ",api);
-  };
-
-  //  --qty
-  const decreaseQty = async (productId, qty) => {
-    const api = await axios.post(
-      `${url}/cart/--qty`,
-      { productId, qty },
-      {
-        headers: {
-          "Content-Type": "Application/json",
-          Auth: token,
-        },
-        withCredentials: true,
-      }
-    );
-    setReload(!reload);
-    // console.log("decrease cart items ",api);
-    toast.success(api.data.message, {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-    //  setCart(api.data.cart);
-    //  setUser("user cart ",api);
-  };
-
-  //  remove Item from cart
-  const removeFromCart = async (productId) => {
-    const api = await axios.delete(`${url}/cart/remove/${productId}`, {
-      headers: {
-        "Content-Type": "Application/json",
-        Auth: token,
-      },
-      withCredentials: true,
-    });
-    setReload(!reload);
-    // console.log("remove item from cart ",api);
-    toast.success(api.data.message, {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-    //  setCart(api.data.cart);
-    //  setUser("user cart ",api);
-  };
-
-  //  clear Cart
-  const clearCart = async () => {
-    const api = await axios.delete(`${url}/cart/clear`, {
-      headers: {
-        "Content-Type": "Application/json",
-        Auth: token,
-      },
-      withCredentials: true,
-    });
-    setReload(!reload);
-    // console.log("remove item from cart ",api);
-    toast.success(api.data.message, {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-    //  setCart(api.data.cart);
-    //  setUser("user cart ",api);
-  };
-
-  //  Add Shipping Address
-  const shippingAddress = async (
-    fullName,
-    address,
-    city,
-    state,
-    country,
-    pincode,
-    phoneNumber
-  ) => {
-    const api = await axios.post(
-      `${url}/address/add`,
-      { fullName, address, city, state, country, pincode, phoneNumber },
-      {
-        headers: {
-          "Content-Type": "Application/json",
-          Auth: token,
-        },
-        withCredentials: true,
-      }
-    );
-    setReload(!reload);
-    // console.log("remove item from cart ",api);
-    toast.success(api.data.message, {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-    return api.data;
-    //  setCart(api.data.cart);
-    //  setUser("user cart ",api);
-  };
-
-  // get User latest address
-  const getAddress = async () => {
-    const api = await axios.get(`${url}/address/get`, {
-      headers: {
-        "Content-Type": "Application/json",
-        Auth: token,
-      },
-      withCredentials: true,
-    });
-    //  console.log("user address ", api.data.userAddress);
-    setUserAddress(api.data.userAddress);
-  };
-
-  // get User order
-  const user_Order = async () => {
-    const api = await axios.get(`${url}/payment/userorder`, {
-      headers: {
-        "Content-Type": "Application/json",
-        Auth: token,
-      },
-      withCredentials: true,
-    });
-    //  console.log("user order ", api.data);
-    setUserOrder(api.data)
+   
+    const addToCart = async ( productId ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
     
+          let response = await axios.post(
+            `${BASE_URL}/cart/add`,
+            {
+              productId:productId, 
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+          setReload(!reload)
+        }
+      } catch (err) {
+        console.log("Error in addding items in the cart ", err);
+      }
+    };
+    
+    const decreaseQuantity = async ( productId ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+    
+          let response = await axios.get(
+            `${BASE_URL}/cart/--qty/${productId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+          setReload(!reload)
+        }
+      } catch (err) {
+        console.log("Error in decreasing the quantity", err);
+      }
+    };
+    const removeItem = async ( productId ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+    
+          let response = await axios.delete(
+            `${BASE_URL}/cart/remove/${productId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+
+          setReload(!reload)
+        }
+      } catch (err) {
+        console.log("Error in removing item from the cart ", err);
+      }
+    };
+    
+    const clearCart = async ( ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+    
+          let response = await axios.delete(
+            `${BASE_URL}/cart/clear`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+          setReload(!reload)
+        }
+      } catch (err) {
+        console.log("Error in clearning the cart ", err);
+      }
+    };
+    
+
+
+
+    const addAddress = async (address ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+          let response = await axios.post(
+            `${BASE_URL}/address/add`,address,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+          setReload(!reload)
+          toast.success(response.data.message)
+        }
+      } catch (err) {
+        console.log("Error in adding the address ", err);
+      }
+    };
+    const getAddress = async ( ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+          let response = await axios.get(
+            `${BASE_URL}/address/get`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+          setUserAddress(response.data.address)
+        }
+      } catch (err) {
+        console.log("Error in getting the address ", err);
+      }
+    };
+    const getOrders = async ( ) => {
+      try {
+        if (localStorage.getItem("token")) {
+          const token = localStorage.getItem("token");
+          let response = await axios.get(
+            `${BASE_URL}/payment/getOrders`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Auth": token, 
+              },
+              withCredentials: true,
+            }
+          );
+          setUserOrder(response.data.orders)
+          console.log(response.data.orders)
+
+        }
+      } catch (err) {
+        console.log("Error in getting the address ", err);
+      }
+    };
+    
+  
+
+
+
+
+
+    return (
+      <AppContext.Provider
+        value={{
+          products: filteredProducts,
+          searchFilter,
+          setSearchFilter,
+          categoryFilter,
+          setCategoryFilterState,
+          token,
+          isLoggedIn,
+          loginUser,
+          registerUser,
+          logoutUser,
+          clearFilters, 
+          user,userProfile ,
+          cart,
+          clearCart , 
+          addToCart ,
+          decreaseQuantity,
+          removeItem,addAddress,userAddress,getOrders,userOrder
+        }}
+      >
+        {props.children}
+      </AppContext.Provider>
+    );
   };
-console.log("user order = ", userOrder);
 
-  return (
-    <AppContext.Provider
-      value={{
-        products,
-        register,
-        login,
-        url,
-        token,
-        setIsAuthenticated,
-        isAuthenticated,
-        filteredData,
-        setFilteredData,
-        logout,
-        user,
-        addToCart,
-        cart,
-        decreaseQty,
-        removeFromCart,
-        clearCart,
-        shippingAddress,
-        userAddress,
-        userOrder,
-      }}
-    >
-      {props.children}
-    </AppContext.Provider>
-  );
-};
-
-export default AppState;
+  export default Appstate;
