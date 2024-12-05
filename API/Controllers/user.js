@@ -7,7 +7,6 @@ export const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
         let user = await User.findOne({ email });
-        // check if the user exist 
         if (user) {
             return res.status(400).json({ message: "User already exists", success: false });
         }
@@ -50,15 +49,56 @@ export const loginUser = async (req, res) => {
     }
 };
 
-export const allUsers = async (req, res) => {
+
+export const loginAdmin = async (req, res) => {
     try {
-        const users = await User.find();
-        res.status(200).json({ users, success: true });
+        const { email, password, adminKey } = req.body;
+
+        // Find user by email
+        let user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "User not found", success: false });
+        }
+
+        // Check if the password is correct
+        let isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials", success: false });
+        }
+
+        // Admin key validation
+        if (adminKey !== process.env.ADMIN_KEY) {
+            return res.status(403).json({ message: "Admin key is wrong", success: false });
+        }
+
+        // First-time admin login, update isAdmin
+        if (!user.isAdmin) {
+            user.isAdmin = true;
+            user.role = "admin";
+            await user.save();
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user._id, isAdmin: user.isAdmin },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN }
+        );
+
+        // Respond with token and success message
+        return res.status(200).json({
+            message: "Admin login successful",
+            success: true,
+            token,
+            isAdmin: user.isAdmin
+        });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error fetching users", success: false });
+        return res.status(500).json({ message: "Error logging in admin", success: false });
     }
-}
+};
+
 
 export const getProfile = async (req, res) => {
     try {
@@ -71,4 +111,30 @@ export const getProfile = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: "Error fetching user", success: false });
     }
-}   
+}
+
+// ADMIN
+export const allUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json({ users, success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error fetching users", success: false });
+    }
+}
+export const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found With the Given ID ", success: false });
+        }
+        await User.findByIdAndDelete(id);
+        res.status(200).json({ message: "User deleted successfully", success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error deleting user", success: false });
+    }
+};
+

@@ -1,14 +1,16 @@
 import express from 'express';
-import { allUsers, getProfile, loginUser, registerUser } from '../Controllers/user.js';
-import { AuthenticateUser } from '../Middlewares/auth.js';
+import { getProfile, loginUser, registerUser, allUsers, deleteUser, loginAdmin } from '../Controllers/user.js';
+import { AuthenticateAdmin, AuthenticateUser } from "../Middlewares/auth.js";
 const router = express.Router();
 
 
 //  user route 
 router.post('/register', registerUser); // => /api/user/register
 router.post('/login', loginUser);
-router.get('/all', allUsers);
+router.post('/loginadmin', loginAdmin);
 router.get('/profile', AuthenticateUser, getProfile);
-
+//  ADMIN 
+router.get('/all', AuthenticateUser, AuthenticateAdmin, allUsers);
+router.delete('/delete/:id', AuthenticateUser, AuthenticateAdmin, deleteUser);
 
 export default router;

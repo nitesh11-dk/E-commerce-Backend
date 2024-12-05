@@ -1,18 +1,6 @@
 import Product from "../Models/Product.js";
 
 
-//  add product 
-export const addProduct = async (req, res) => {
-    try {
-        const { name, description, price, image, category, quantity } = req.body;
-        const product = new Product({ name, description, price, image, category, quantity });
-        await product.save();
-        res.status(201).json({ message: "Product added successfully", success: true });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "error in adding product" });
-    }
-};
 
 
 
@@ -40,6 +28,22 @@ export const getProductById = async (req, res) => {
         res.status(500).json({ message: "product not found with this id", success: false });
     }
 };
+
+
+
+//  add product 
+export const addProduct = async (req, res) => {
+    try {
+        const { name, description, price, image, category, quantity } = req.body;
+        const product = new Product({ name, description, price, image, category, quantity });
+        await product.save();
+        res.status(201).json({ message: "Product added successfully", success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "error in adding product" });
+    }
+};
+
 
 //  update product 
 export const updateProduct = async (req, res) => {
