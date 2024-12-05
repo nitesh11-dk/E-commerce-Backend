@@ -138,3 +138,33 @@ export const deleteUser = async (req, res) => {
     }
 };
 
+
+
+export const isUserAdmin = async (req, res, next) => {
+    try {
+        const token = req.header('Auth');
+        if (!token) {
+            return res.status(401).json({ success: false, message: 'Access denied. No token provided.' });
+        }
+
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // Fetch the user from the database
+        const user = await User.findById(userId); // Adjust based on your DB setup
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found.' });
+        }
+
+        // Check if the user has an admin role
+        if (!user.isAdmin) {
+            return res.status(403).json({ success: false, message: 'Access denied. Admins only.' });
+        }
+        return res.status(200).json({ success: true, message: 'User is Admin.' });
+
+    } catch (error) {
+        console.error('Error verifying admin:', error);
+        res.status(400).json({ success: false, message: 'Invalid token or access denied.' });
+    }
+};
