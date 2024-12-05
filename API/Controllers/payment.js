@@ -105,3 +105,19 @@ export const allOrders = async (req, res) => {
         res.status(500).json({ message: "Error getting orders", success: false });
     }
 }
+
+export const getOrderById = async (req, res) => {
+    try {
+        const { id } = req.params;  // Get order ID from the URL parameters
+        const order = await Payment.findById(id);  // Find the order by its ID
+
+        if (!order) {
+            return res.status(404).json({ message: "Order not found", success: false });
+        }
+
+        res.status(200).json({ order, success: true });  // Return the order if found
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error getting order by ID", success: false });
+    }
+};

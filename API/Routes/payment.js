@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { checkout, verifyPayment, getOrders, allOrders } from '../Controllers/payment.js';
+import { checkout, verifyPayment, getOrders, allOrders, getOrderById } from '../Controllers/payment.js';
 import { AuthenticateUser, AuthenticateAdmin } from '../Middlewares/auth.js';
 
 router.post('/checkout', checkout)
@@ -9,7 +9,8 @@ router.post('/checkout', checkout)
 router.post('/verify-payment', verifyPayment)
 
 router.get('/getOrders', AuthenticateUser, getOrders);
-router.get('/allOrders', AuthenticateUser, AuthenticateAdmin, allOrders);
+router.get('/allorders', AuthenticateUser, AuthenticateAdmin, allOrders);
+router.get('/order/:id', AuthenticateUser, AuthenticateAdmin, getOrderById);
 
 
 

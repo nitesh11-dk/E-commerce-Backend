@@ -12,6 +12,6 @@ router.get('/checkadmin', isUserAdmin);
 router.get('/profile', AuthenticateUser, getProfile);
 //  ADMIN 
 router.get('/all', AuthenticateUser, AuthenticateAdmin, allUsers);
-router.delete('/delete/:id', AuthenticateUser, AuthenticateAdmin, deleteUser);
+router.delete('/:id', AuthenticateUser, AuthenticateAdmin, deleteUser);
 
 export default router;
