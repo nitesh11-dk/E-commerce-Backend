@@ -29,7 +29,7 @@ app.use('/api/cart', cart)
 app.use('/api/address', address)
 app.use('/api/payment', payment)
 
-
+//  here also the authication for the user and the admin is also commited  and done 
 
 app.listen(PORT, () => {
     console.log(`Server running on port http://localhost:${PORT}`)
