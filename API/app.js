@@ -81,9 +81,9 @@ const data = [
 
 const insertProducts = async () => {
   try {
-    await Product.insertMany(data); /
+    await Product.insertMany(data); 
     console.log('Products inserted successfully');
-    mongoose.connection.close(); // Close the DB connection
+    mongoose.connection.close(); 
   } catch (error) {
     console.error('Error inserting products:', error);
   }
