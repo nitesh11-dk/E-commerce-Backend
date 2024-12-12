@@ -6,21 +6,46 @@ import jwt from "jsonwebtoken";
 export const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ message: "User already exists", success: false });
+
+        // Check if the email already exists in the database
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: "A user with this email already exists. Please use a different email."
+            });
         }
 
-        let hashPassword = await bcrypt.hash(password, 10);
-        user = new User({ name, email, password: hashPassword });
-        await user.save();
-        res.status(201).json({ message: "User registered successfully", success: true });
+        // Hash the password
+        const hashPassword = await bcrypt.hash(password, 10);
 
+        // Create a new user
+        const user = new User({ name, email, password: hashPassword });
+        await user.save();
+
+        return res.status(201).json({
+            success: true,
+            message: "User registered successfully",
+            user: { id: user._id, name: user.name, email: user.email }
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error registering user" });
+        console.error("Error registering user:", error);
+
+        // Handle specific errors
+        if (error.code === 11000) {
+            return res.status(400).json({
+                success: false,
+                message: "Duplicate entry detected. This email is already registered."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred during registration. Please try again later."
+        });
     }
 };
+
 
 export const loginUser = async (req, res) => {
     try {
@@ -113,6 +138,35 @@ export const getProfile = async (req, res) => {
     }
 }
 
+export const editUser = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+       
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found", success: false });
+        }
+
+        
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (password) {
+            const hashPassword = await bcrypt.hash(password, 10);
+            user.password = hashPassword;
+        }
+
+      
+        await user.save();
+
+        res.status(200).json({ message: "User updated successfully", success: true, user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating user", success: false });
+    }
+};
+
+
 // ADMIN
 export const allUsers = async (req, res) => {
     try {
@@ -138,6 +192,32 @@ export const deleteUser = async (req, res) => {
     }
 };
 
+export const toggleUserAdmin = async (req, res) => {
+    try {
+        const { id } = req.params; 
+
+       
+        const user = await User.findById(id); 
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found.' });
+        }
+
+        
+        user.isAdmin = !user.isAdmin;
+        user.role = user.isAdmin ? "admin" : "user";
+        const updatedUser = await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: `User admin status updated successfully to ${updatedUser.isAdmin}`,
+            isAdmin: updatedUser.isAdmin
+        });
+    } catch (error) {
+        console.error('Error toggling admin status:', error);
+        res.status(500).json({ success: false, message: 'An error occurred while toggling admin status.' });
+    }
+};
 
 
 export const isUserAdmin = async (req, res, next) => {

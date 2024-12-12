@@ -1,5 +1,5 @@
 import express from 'express';
-import { getProfile, loginUser, registerUser, allUsers, deleteUser, loginAdmin, isUserAdmin } from '../Controllers/user.js';
+import { getProfile, loginUser, registerUser, allUsers, deleteUser, loginAdmin, isUserAdmin ,editUser,toggleUserAdmin } from '../Controllers/user.js';
 import { AuthenticateAdmin, AuthenticateUser } from "../Middlewares/auth.js";
 const router = express.Router();
 
@@ -10,8 +10,12 @@ router.post('/login', loginUser);
 router.post('/loginadmin', loginAdmin);
 router.get('/checkadmin', isUserAdmin);
 router.get('/profile', AuthenticateUser, getProfile);
+router.post('/editUser', AuthenticateUser, editUser);
+router.delete('/:id', AuthenticateUser, deleteUser);
+
+
 //  ADMIN 
 router.get('/all', AuthenticateUser, AuthenticateAdmin, allUsers);
-router.delete('/:id', AuthenticateUser, AuthenticateAdmin, deleteUser);
+router.put('/toggleuseradmin/:id', AuthenticateUser, AuthenticateAdmin, toggleUserAdmin);
 
 export default router;
