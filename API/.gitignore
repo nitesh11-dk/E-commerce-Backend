@@ -47,3 +47,12 @@ Thumbs.db
 
 # Coverage directory used by tools like istanbul
 coverage/
+
+# ADMIN_KEY=admin
+# JWT_EXPIRES_IN=24h
+# JWT_SECRET=niteshkushwaha
+# # MONGO_URI=mongodb+srv://nitesh_dk:rakesh114@nitesh.zownidz.mongodb.net/?retryWrites=true&w=majority&appName=NItesh
+# MONGO_URI=mongodb://localhost:27017
+# PORT=3000
+# RAZORPAY_KEY_ID=rzp_test_YaU552VxGMnvhU
+# RAZORPAY_SECRET=4AL5mEvdAaq0IyYlrgYHWPMk
