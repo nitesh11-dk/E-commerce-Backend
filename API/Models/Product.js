@@ -25,11 +25,6 @@ const productSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    },
-    quantity: {
-        type: Number,
-        required: true,
-        default: 0
     }
 });
 
