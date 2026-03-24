@@ -144,8 +144,8 @@ export const updateOrderStatus = async (req, res) => {
         const order = await Payment.findById(id);
         if (!order) return res.status(404).json({ message: "Order not found", success: false });
 
-        if (order.orderStatus === 'Cancelled') {
-            return res.status(400).json({ message: "Cannot change the status of a cancelled order.", success: false });
+        if (order.orderStatus === 'Cancelled' || order.orderStatus === 'Delivered') {
+            return res.status(400).json({ message: `Cannot change the status of an order that is already ${order.orderStatus}.`, success: false });
         }
         
         order.orderStatus = orderStatus;
