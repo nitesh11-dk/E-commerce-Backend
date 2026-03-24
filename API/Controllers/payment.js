@@ -116,7 +116,7 @@ export const getOrders = async (req, res) => {
 
 export const allOrders = async (req, res) => {
     try {
-        const orders = await Payment.find();
+        const orders = await Payment.find().sort({ orderDate: -1 });
         res.status(200).json({ orders, success: true });
     } catch (error) {
         console.error(error);
