@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import { connectDb } from "./config/dbconfig.js";
 import cors from "cors";
@@ -7,12 +10,11 @@ import product from "./Routes/product.js";
 import cart from "./Routes/cart.js";
 import address from "./Routes/address.js";
 import payment from "./Routes/payment.js";
-const PORT = process.env.PORT || 3000;
-const app = express();
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 
-dotenv.config();
+const PORT = process.env.PORT || 3000;
+const app = express();
+
 connectDb();
 
 app.use(

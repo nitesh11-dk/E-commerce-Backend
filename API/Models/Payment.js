@@ -7,6 +7,14 @@ const paymentSchema = new mongoose.Schema({
     },
     payStatus: {
         type: String
+    },
+    orderStatus: {
+        type: String,
+        default: "Processing"
+    },
+    refundStatus: {
+        type: String,
+        default: "Not Applicable"
     }
 }, { strict: false })
 
