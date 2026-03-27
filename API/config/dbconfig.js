@@ -1,19 +1,23 @@
 import mongoose from "mongoose";
+import dns from "dns";
+
+
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 export const connectDb = async () => {
     try {
-        mongoose.connect(`${process.env.MONGO_URI}/e-commerce`)
-        const connection = mongoose.connection;
-        connection.on("connected", () => {
-            console.log("connected to db");
-        })
+        const db = await mongoose.connect(process.env.MONGO_URI, {
+            dbName: "e-commerce", 
+        });
 
-        connection.on("error", (error) => {
-            console.log("something went wrong during connection indb ", error);
+        console.log("✅ DB Connected:", db.connection.host);
+
+        mongoose.connection.on("error", (error) => {
+            console.log("❌ DB Connection Error:", error);
             process.exit(1);
-        })
+        });
 
     } catch (error) {
-        console.log("something went wrong during connection indb ", error);
+        console.log("❌ Something went wrong during DB connection:", error);
     }
-}
+};
